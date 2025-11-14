@@ -1,5 +1,8 @@
+import { MapPin, Navigation, Sparkles, GitBranch, Network, Trees, Route, AlertCircle, Zap, TrendingUp, Volume2, VolumeX } from 'lucide-react';
+import AgendifyPrimaryButton from './AgendifyPrimaryButton';
+
 export default function Sidebar({
-  ciudades,
+  ciudades = [],
   origen,
   setOrigen,
   destino,
@@ -11,63 +14,91 @@ export default function Sidebar({
   onDFS,
   onPrim,
   onKruskal,
-  stats,
-  rutaReal,
-  mostrarRutaReal,
-  setMostrarRutaReal,
   modoSeleccion,
-  setModoSeleccion,
   onSeleccionManualOrigen,
   onSeleccionManualDestino,
   origenManual,
   destinoManual,
   vozActiva,
-  onVozActivaChange
+  onVozActivaChange,
+  rutaReal,
 }) {
   return (
-    <div className="w-96 bg-white shadow-2xl overflow-y-auto flex flex-col">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
-        <h1 className="text-2xl font-bold mb-1">🗺️ Mini Maps</h1>
-        <p className="text-sm opacity-90">Sistema de Rutas con Algoritmos de Grafos</p>
-      </div>
-
-      <div className="p-6 flex-1">
-        {/* Estadísticas */}
-        {stats && (
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
-              <div className="text-2xl font-bold text-blue-600">{stats.ciudades}</div>
-              <div className="text-xs text-gray-600 uppercase mt-1">Ciudades</div>
-            </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
-              <div className="text-2xl font-bold text-purple-600">{stats.rutas}</div>
-              <div className="text-xs text-gray-600 uppercase mt-1">Rutas</div>
+    <aside className="w-[420px] h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 shadow-2xl overflow-y-auto custom-scrollbar">
+      <div className="min-h-full pb-4">
+        {/* Header con Logo - Glassmorphism Effect */}
+        <div className="relative m-4 overflow-hidden rounded-3xl shadow-2xl group">
+          {/* Fondo con gradiente animado */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1FC16B] via-[#1a9d5f] to-[#246BFF] opacity-90"></div>
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30"></div>
+          
+          <div className="relative p-6 text-white">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="relative">
+                <img src="/icon.png" alt="Agendify" className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md p-2 shadow-lg ring-2 ring-white/30" />
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
+              </div>
+              <div>
+                <h1 className="text-3xl font-black tracking-tight drop-shadow-lg">Agendify Routes</h1>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <Zap className="w-3.5 h-3.5 text-yellow-300" />
+                  <p className="text-sm font-medium opacity-95">Planificador Inteligente</p>
+                </div>
+              </div>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Selección de Ciudades */}
-        <div className="mb-6">
-          <h2 className="text-sm font-semibold text-gray-700 uppercase mb-3 tracking-wide">
-            📍 Calcular Ruta
-          </h2>
-          
-          <div className="space-y-3">
+        {/* Banner de Bienvenida - Modern Card */}
+        <div className="mx-4 mb-4 bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-gradient-to-br from-[#1FC16B] to-[#16a861] rounded-xl shadow-md">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Ciudad de Origen</label>
+              <h3 className="font-bold text-gray-800 text-sm mb-1.5 flex items-center gap-2">
+                ¡Bienvenido!
+                <TrendingUp className="w-3.5 h-3.5 text-[#1FC16B]" />
+              </h3>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                Calcula <span className="font-semibold text-[#246BFF]">rutas óptimas</span> entre sucursales usando algoritmos avanzados de grafos. 
+                Explora <span className="font-semibold text-[#1FC16B]">BFS, DFS, Dijkstra</span> y más.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-4 space-y-4">
+          {/* Selección de Origen/Destino - Premium Card */}
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-md">
+                <MapPin className="w-4 h-4 text-white" />
+              </div>
+              <h2 className="text-sm font-bold text-gray-800">Ubicaciones</h2>
+            </div>
+
+            <div className="space-y-4">
+              {/* Origen */}
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-2 flex items-center gap-1.5">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                Punto de origen
+              </label>
               {origen === 'manual' && origenManual ? (
                 <div className="flex gap-2">
-                  <div className="flex-1 px-4 py-2 border border-green-300 bg-green-50 rounded-lg text-sm">
-                    <div className="font-medium text-green-700">📍 Punto Manual</div>
-                    <div className="text-xs text-gray-600">
-                      Lat: {origenManual.lat.toFixed(6)}, Lng: {origenManual.lng.toFixed(6)}
+                  <div className="flex-1 px-4 py-3 border-2 border-[#1FC16B] bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl text-sm shadow-sm">
+                    <div className="font-bold text-[#1FC16B] text-xs flex items-center gap-1.5">
+                      <MapPin className="w-3 h-3" />
+                      Punto Manual
+                    </div>
+                    <div className="text-xs text-gray-600 font-mono mt-1">
+                      {origenManual.lat.toFixed(4)}, {origenManual.lng.toFixed(4)}
                     </div>
                   </div>
                   <button
                     onClick={() => setOrigen('')}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                    title="Limpiar selección"
+                    className="px-3 py-2 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl hover:shadow-lg transition-all duration-300 text-xs font-medium"
                   >
                     ✕
                   </button>
@@ -77,7 +108,7 @@ export default function Sidebar({
                   <select
                     value={origen === 'manual' ? '' : origen}
                     onChange={(e) => setOrigen(e.target.value)}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#1FC16B] focus:ring-2 focus:ring-[#1FC16B]/20 text-sm font-medium bg-white shadow-sm transition-all"
                   >
                     <option value="">Seleccione origen...</option>
                     {ciudades.map(c => (
@@ -86,38 +117,45 @@ export default function Sidebar({
                   </select>
                   <button
                     onClick={onSeleccionManualOrigen}
-                    className={`px-4 py-2 rounded-lg transition ${
+                    className={`p-3 rounded-xl transition-all duration-300 shadow-sm ${
                       modoSeleccion === 'origen'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        ? 'bg-gradient-to-br from-[#1FC16B] to-[#16a861] text-white shadow-lg scale-105'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow'
                     }`}
                     title="Seleccionar en el mapa"
                   >
-                    📍
+                    <MapPin className="w-4 h-4" />
                   </button>
                 </div>
               )}
               {modoSeleccion === 'origen' && (
-                <p className="text-xs text-green-600 mt-1 animate-pulse">
-                  👆 Haz clic en el mapa para seleccionar el origen
+                <p className="text-xs text-[#1FC16B] mt-2 animate-pulse flex items-center gap-1.5 font-medium bg-green-50 px-3 py-2 rounded-lg">
+                  <Navigation className="w-3.5 h-3.5" />
+                  Haz clic en el mapa para seleccionar
                 </p>
               )}
             </div>
 
+            {/* Destino */}
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Ciudad de Destino</label>
+              <label className="block text-xs font-medium text-gray-600 mb-2 flex items-center gap-1.5">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                Punto de destino
+              </label>
               {destino === 'manual' && destinoManual ? (
                 <div className="flex gap-2">
-                  <div className="flex-1 px-4 py-2 border border-red-300 bg-red-50 rounded-lg text-sm">
-                    <div className="font-medium text-red-700">📍 Punto Manual</div>
-                    <div className="text-xs text-gray-600">
-                      Lat: {destinoManual.lat.toFixed(6)}, Lng: {destinoManual.lng.toFixed(6)}
+                  <div className="flex-1 px-4 py-3 border-2 border-[#246BFF] bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl text-sm shadow-sm">
+                    <div className="font-bold text-[#246BFF] text-xs flex items-center gap-1.5">
+                      <MapPin className="w-3 h-3" />
+                      Punto Manual
+                    </div>
+                    <div className="text-xs text-gray-600 font-mono mt-1">
+                      {destinoManual.lat.toFixed(4)}, {destinoManual.lng.toFixed(4)}
                     </div>
                   </div>
                   <button
                     onClick={() => setDestino('')}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                    title="Limpiar selección"
+                    className="px-3 py-2 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl hover:shadow-lg transition-all duration-300 text-xs font-medium"
                   >
                     ✕
                   </button>
@@ -127,7 +165,7 @@ export default function Sidebar({
                   <select
                     value={destino === 'manual' ? '' : destino}
                     onChange={(e) => setDestino(e.target.value)}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#246BFF] focus:ring-2 focus:ring-[#246BFF]/20 text-sm font-medium bg-white shadow-sm transition-all"
                   >
                     <option value="">Seleccione destino...</option>
                     {ciudades.map(c => (
@@ -136,149 +174,157 @@ export default function Sidebar({
                   </select>
                   <button
                     onClick={onSeleccionManualDestino}
-                    className={`px-4 py-2 rounded-lg transition ${
+                    className={`p-3 rounded-xl transition-all duration-300 shadow-sm ${
                       modoSeleccion === 'destino'
-                        ? 'bg-red-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        ? 'bg-gradient-to-br from-[#246BFF] to-[#1a55d8] text-white shadow-lg scale-105'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow'
                     }`}
                     title="Seleccionar en el mapa"
                   >
-                    📍
+                    <MapPin className="w-4 h-4" />
                   </button>
                 </div>
               )}
               {modoSeleccion === 'destino' && (
-                <p className="text-xs text-red-600 mt-1 animate-pulse">
-                  👆 Haz clic en el mapa para seleccionar el destino
+                <p className="text-xs text-[#246BFF] mt-2 animate-pulse flex items-center gap-1.5 font-medium bg-blue-50 px-3 py-2 rounded-lg">
+                  <Navigation className="w-3.5 h-3.5" />
+                  Haz clic en el mapa para seleccionar
                 </p>
               )}
             </div>
 
+            {/* Botón Calcular Ruta - Premium */}
             <button
               onClick={onCalcularRuta}
               disabled={!origen || !destino || loading}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 rounded-2xl text-white font-bold shadow-lg hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 text-sm relative overflow-hidden group disabled:hover:shadow-lg"
+              style={{ background: 'linear-gradient(135deg, #1FC16B 0%, #246BFF 100%)' }}
             >
-              🧭 Calcular Ruta Óptima (Dijkstra)
-            </button>
-
-            <div className="mt-3">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={mostrarRutaReal}
-                  onChange={(e) => setMostrarRutaReal(e.target.checked)}
-                  className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
-                />
-                <span className="text-sm text-gray-700">
-                  🚗 Mostrar ruta real con direcciones de calles
-                </span>
-              </label>
-            </div>
-
-            <div className="mt-2">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={vozActiva}
-                  onChange={(e) => onVozActivaChange(e.target.checked)}
-                  className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
-                  disabled={!mostrarRutaReal}
-                />
-                <span className={`text-sm ${!mostrarRutaReal ? 'text-gray-400' : 'text-gray-700'}`}>
-                  🔊 Activar instrucciones por voz (estilo Google Maps)
-                </span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Otros Algoritmos */}
-        <div className="mb-6">
-          <h2 className="text-sm font-semibold text-gray-700 uppercase mb-3 tracking-wide">
-            🔬 Otros Algoritmos
-          </h2>
-          
-          {(origen === 'manual' || destino === 'manual') && (
-            <p className="text-xs text-amber-600 mb-2 p-2 bg-amber-50 rounded border border-amber-200">
-              ℹ️ Los algoritmos de grafo solo funcionan con ciudades predefinidas. Para puntos manuales, usa Dijkstra con ruta real.
-            </p>
-          )}
-          
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={onBFS}
-              disabled={!origen || loading || origen === 'manual'}
-              className="bg-gradient-to-r from-pink-500 to-rose-500 text-white py-2 rounded-lg text-sm font-medium hover:shadow-md transition disabled:opacity-50"
-            >
-              BFS
-            </button>
-            <button
-              onClick={onDFS}
-              disabled={!origen || loading || origen === 'manual'}
-              className="bg-gradient-to-r from-pink-500 to-rose-500 text-white py-2 rounded-lg text-sm font-medium hover:shadow-md transition disabled:opacity-50"
-            >
-              DFS
-            </button>
-            <button
-              onClick={onPrim}
-              disabled={!origen || loading || origen === 'manual' || destino === 'manual'}
-              className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-2 rounded-lg text-sm font-medium hover:shadow-md transition disabled:opacity-50"
-            >
-              Prim (MST)
-            </button>
-            <button
-              onClick={onKruskal}
-              disabled={loading || origen === 'manual' || destino === 'manual'}
-              className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-2 rounded-lg text-sm font-medium hover:shadow-md transition disabled:opacity-50"
-            >
-              Kruskal (MST)
+              <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+              <Navigation className="w-5 h-5 relative z-10" />
+              <span className="relative z-10">
+                Calcular Ruta Óptima (Dijkstra)
+              </span>
             </button>
           </div>
         </div>
 
-        {/* Loading */}
+        {/* Algoritmos adicionales - Premium Grid */}
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-md">
+                <Network className="w-4 h-4 text-white" />
+              </div>
+              <h2 className="text-sm font-bold text-gray-800">Algoritmos de Grafos</h2>
+            </div>
+
+            {(origen === 'manual' || destino === 'manual') && (
+              <div className="mb-4 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border-2 border-amber-200 flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                <span className="text-xs text-amber-700 font-medium leading-relaxed">
+                  Los algoritmos de grafo requieren ciudades predefinidas.
+                </span>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={onBFS}
+                disabled={!origen || loading || origen === 'manual'}
+                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-pink-500 to-rose-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                <GitBranch className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">BFS</span>
+              </button>
+              <button
+                onClick={onDFS}
+                disabled={!origen || loading || origen === 'manual'}
+                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-rose-500 to-red-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                <GitBranch className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">DFS</span>
+              </button>
+              <button
+                onClick={onPrim}
+                disabled={!origen || loading || origen === 'manual' || destino === 'manual'}
+                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-cyan-500 to-blue-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                <Trees className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">Prim</span>
+              </button>
+              <button
+                onClick={onKruskal}
+                disabled={loading || origen === 'manual' || destino === 'manual'}
+                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-blue-500 to-indigo-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                <Trees className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">Kruskal</span>
+              </button>
+            </div>
+          </div>
+
+        {/* Loading - Modern Spinner */}
         {loading && (
-          <div className="text-center py-6">
-            <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-indigo-200 border-t-indigo-600"></div>
-            <p className="text-gray-600 mt-3">Calculando...</p>
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-8 shadow-lg text-center">
+            <div className="relative inline-block">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-transparent" style={{ borderTopColor: '#1FC16B' }}></div>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#1FC16B]/20 to-[#246BFF]/20 blur-md"></div>
+            </div>
+            <p className="text-gray-700 mt-4 text-sm font-semibold">Calculando ruta...</p>
+            <p className="text-gray-500 text-xs mt-1">Procesando algoritmo</p>
           </div>
         )}
 
-        {/* Resultados */}
+        {/* Resultados - Premium Card */}
         {resultado && !loading && (
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-l-4 border-indigo-600 p-4 rounded-lg">
-            <h3 className="text-sm font-bold text-indigo-700 mb-3 uppercase">
-              {resultado.tipo === 'dijkstra' && '🎯 Ruta Óptima Encontrada'}
-              {resultado.tipo === 'bfs' && '🔍 Recorrido BFS'}
-              {resultado.tipo === 'dfs' && '🔍 Recorrido DFS'}
-              {resultado.tipo === 'prim' && '🌳 Árbol de Expansión Mínima (Prim)'}
-              {resultado.tipo === 'kruskal' && '🌳 Árbol de Expansión Mínima (Kruskal)'}
+          <div className="bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-xl border-l-4 border-[#1FC16B] hover:shadow-2xl transition-all duration-300">
+            <h3 className="text-sm font-black text-gray-800 mb-4 flex items-center gap-2.5">
+              <div className="p-1.5 bg-gradient-to-br from-[#1FC16B] to-[#16a861] rounded-lg">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <span>
+                {resultado.tipo === 'dijkstra' && 'Ruta Óptima'}
+                {resultado.tipo === 'agendify' && 'Ruta Calculada'}
+                {resultado.tipo === 'bfs' && 'Recorrido BFS'}
+                {resultado.tipo === 'dfs' && 'Recorrido DFS'}
+                {resultado.tipo === 'prim' && 'Árbol MST (Prim)'}
+                {resultado.tipo === 'kruskal' && 'Árbol MST (Kruskal)'}
+              </span>
             </h3>
 
             {resultado.distancia !== undefined && (
-              <div className="bg-white rounded-lg p-3 mb-3">
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 mb-4 border-2 border-green-100 shadow-sm">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Distancia Total</span>
-                  <span className="text-lg font-bold text-indigo-600">
-                    {resultado.distancia.toFixed(1)} km
-                  </span>
+                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Distancia Total</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-black bg-gradient-to-r from-[#1FC16B] to-[#16a861] bg-clip-text text-transparent">
+                      {resultado.distancia.toFixed(2)}
+                    </span>
+                    <span className="text-sm font-bold text-gray-500">km</span>
+                  </div>
                 </div>
               </div>
             )}
 
             {resultado.camino && resultado.camino.length > 0 && (
-              <div className="bg-white rounded-lg p-3 mb-3">
-                <p className="text-xs text-gray-500 uppercase mb-2">Recorrido</p>
-                <ul className="space-y-1">
+              <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-4 border border-gray-200 shadow-sm">
+                <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Route className="w-3.5 h-3.5" />
+                  Recorrido
+                </p>
+                <ul className="space-y-2">
                   {resultado.camino.map((ciudad, idx) => (
-                    <li key={idx} className="text-sm text-gray-700 flex items-center">
-                      <span className="mr-2">
+                    <li key={idx} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                      <span className="text-lg flex-shrink-0">
                         {idx === 0 && '🚀'}
                         {idx === resultado.camino.length - 1 && idx !== 0 && '🎯'}
                         {idx !== 0 && idx !== resultado.camino.length - 1 && '→'}
                       </span>
-                      {typeof ciudad === 'string' ? ciudad : ciudad?.nombre || ciudad}
+                      <span className="font-bold text-sm text-gray-800">{typeof ciudad === 'string' ? ciudad : ciudad?.nombre || ciudad}</span>
                     </li>
                   ))}
                 </ul>
@@ -286,21 +332,30 @@ export default function Sidebar({
             )}
 
             {resultado.aristas && resultado.aristas.length > 0 && (
-              <div className="bg-white rounded-lg p-3">
-                <p className="text-xs text-gray-500 uppercase mb-2">Aristas del Árbol</p>
-                <ul className="space-y-1">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 mt-4 border border-blue-200 shadow-sm">
+                <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Network className="w-3.5 h-3.5" />
+                  Aristas del Árbol
+                </p>
+                <ul className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
                   {resultado.aristas.map((arista, idx) => (
-                    <li key={idx} className="text-sm text-gray-700">
-                      {arista.origen} ↔ {arista.destino} ({arista.peso.toFixed(1)} km)
+                    <li key={idx} className="text-xs bg-white/50 rounded-lg p-2 font-medium text-gray-700 hover:bg-white transition-colors">
+                      <span className="font-bold text-blue-600">{arista.origen}</span>
+                      {' '}↔{' '}
+                      <span className="font-bold text-purple-600">{arista.destino}</span>
+                      <span className="text-gray-500"> ({arista.peso.toFixed(1)} km)</span>
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 pt-3 border-t border-gray-200">
+                <div className="mt-4 pt-4 border-t-2 border-blue-200">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Peso Total</span>
-                    <span className="text-lg font-bold text-indigo-600">
-                      {resultado.pesoTotal.toFixed(1)} km
-                    </span>
+                    <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Peso Total</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        {resultado.pesoTotal.toFixed(1)}
+                      </span>
+                      <span className="text-sm font-bold text-gray-500">km</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -308,66 +363,93 @@ export default function Sidebar({
           </div>
         )}
 
-        {/* Instrucciones de Ruta Real */}
-        {rutaReal && mostrarRutaReal && !loading && (
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-l-4 border-green-600 p-4 rounded-lg mt-4">
-            <h3 className="text-sm font-bold text-green-700 mb-3 uppercase flex items-center">
-              <span className="mr-2">🚗</span>
-              Direcciones Turn-by-Turn
-            </h3>
-
-            <div className="bg-white rounded-lg p-3 mb-3">
-              <div className="grid grid-cols-2 gap-2 text-center">
-                <div>
-                  <div className="text-lg font-bold text-green-600">
-                    {(rutaReal.totalDistance / 1000).toFixed(1)} km
-                  </div>
-                  <div className="text-xs text-gray-500">Distancia</div>
+        {/* Control de Voz - Premium Toggle */}
+        {rutaReal && rutaReal.instructions && (
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-xl shadow-md transition-all duration-300 ${
+                  vozActiva 
+                    ? 'bg-gradient-to-br from-[#1FC16B] to-[#16a861]' 
+                    : 'bg-gradient-to-br from-gray-400 to-gray-500'
+                }`}>
+                  {vozActiva ? (
+                    <Volume2 className="w-4 h-4 text-white" />
+                  ) : (
+                    <VolumeX className="w-4 h-4 text-white" />
+                  )}
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-green-600">
-                    {Math.round(rutaReal.totalTime / 60)} min
-                  </div>
-                  <div className="text-xs text-gray-500">Tiempo estimado</div>
+                  <h3 className="text-sm font-bold text-gray-800">
+                    Guía por Voz
+                  </h3>
+                  <p className="text-xs text-gray-500">
+                    {vozActiva ? 'Activada' : 'Desactivada'}
+                  </p>
                 </div>
               </div>
+              
+              {/* Toggle Switch - Modern */}
+              <button
+                onClick={() => onVozActivaChange(!vozActiva)}
+                className={`relative w-14 h-7 rounded-full transition-all duration-300 shadow-inner ${
+                  vozActiva 
+                    ? 'bg-gradient-to-r from-[#1FC16B] to-[#16a861]' 
+                    : 'bg-gray-300'
+                }`}
+              >
+                <div
+                  className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-lg transition-all duration-300 transform ${
+                    vozActiva ? 'translate-x-7' : 'translate-x-0'
+                  }`}
+                >
+                  <div className={`absolute inset-0 rounded-full transition-all duration-300 ${
+                    vozActiva ? 'bg-gradient-to-br from-green-400/20 to-emerald-500/20' : ''
+                  }`}></div>
+                </div>
+              </button>
             </div>
 
-            <div className="bg-white rounded-lg p-3 max-h-96 overflow-y-auto">
-              <p className="text-xs text-gray-500 uppercase mb-3">Instrucciones paso a paso</p>
-              <ol className="space-y-3">
-                {rutaReal.instructions.map((instruction, idx) => {
-                  const getIcon = (type) => {
-                    if (type === 'WaypointReached') return '🎯';
-                    if (type === 'Head') return '🚀';
-                    if (type.includes('Right')) return '➡️';
-                    if (type.includes('Left')) return '⬅️';
-                    if (type.includes('Straight')) return '⬆️';
-                    if (type.includes('UTurn')) return '↩️';
-                    return '▶️';
-                  };
-
-                  return (
-                    <li key={idx} className="flex items-start space-x-2 pb-3 border-b border-gray-100 last:border-0">
-                      <span className="text-lg flex-shrink-0">{getIcon(instruction.type)}</span>
-                      <div className="flex-1">
-                        <p className="text-sm text-gray-800">{instruction.text}</p>
-                        {instruction.distance > 0 && (
-                          <p className="text-xs text-gray-500 mt-1">
-                            {instruction.distance >= 1000 
-                              ? `${(instruction.distance / 1000).toFixed(1)} km`
-                              : `${Math.round(instruction.distance)} m`}
-                          </p>
-                        )}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
+            {/* Información de ruta real */}
+            {rutaReal && (
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-gray-600 font-medium">Distancia Real:</span>
+                    <span className="font-bold text-[#1FC16B]">
+                      {(rutaReal.distance / 1000).toFixed(2)} km
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-gray-600 font-medium">Tiempo Estimado:</span>
+                    <span className="font-bold text-[#246BFF]">
+                      {Math.round(rutaReal.duration / 60)} min
+                    </span>
+                  </div>
+                  {vozActiva && (
+                    <div className="mt-3 p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                      <p className="text-xs text-green-700 font-medium flex items-center gap-2">
+                        <Zap className="w-3.5 h-3.5" />
+                        Instrucciones de navegación activas
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
+
+      {/* CTA Agendify - Premium Button */}
+      <div className="mx-4 mb-4 relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-[#1FC16B] to-[#246BFF] rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+        <AgendifyPrimaryButton
+          label="✨ Crear Cuenta Gratis"
+          onClick={() => window.open('https://agendify.pro', '_blank')}
+        />
+      </div>
     </div>
+  </aside>
   );
 }
