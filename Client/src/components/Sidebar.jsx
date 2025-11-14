@@ -27,21 +27,21 @@ export default function Sidebar({
     <aside className="w-[420px] h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 shadow-2xl overflow-y-auto custom-scrollbar">
       <div className="min-h-full pb-4">
         {/* Header con Logo - Glassmorphism Effect */}
-        <div className="relative m-4 overflow-hidden rounded-3xl shadow-2xl group">
+        <div className="relative m-4 overflow-hidden rounded-3xl shadow-2xl group animate-fade-in-up">
           {/* Fondo con gradiente animado */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1FC16B] via-[#1a9d5f] to-[#246BFF] opacity-90"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1FC16B] via-[#1a9d5f] to-[#246BFF] opacity-90 animate-gradient"></div>
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30"></div>
           
           <div className="relative p-6 text-white">
             <div className="flex items-center gap-4 mb-3">
-              <div className="relative">
-                <img src="/icon.png" alt="Agendify" className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md p-2 shadow-lg ring-2 ring-white/30" />
+              <div className="relative animate-float">
+                <img src="/icon.png" alt="Agendify" className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md p-2 shadow-lg ring-2 ring-white/30 transition-transform duration-300 group-hover:scale-110" />
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
               </div>
               <div>
                 <h1 className="text-3xl font-black tracking-tight drop-shadow-lg">Agendify Routes</h1>
                 <div className="flex items-center gap-1.5 mt-1">
-                  <Zap className="w-3.5 h-3.5 text-yellow-300" />
+                  <Zap className="w-3.5 h-3.5 text-yellow-300 animate-pulse" />
                   <p className="text-sm font-medium opacity-95">Planificador Inteligente</p>
                 </div>
               </div>
@@ -50,15 +50,15 @@ export default function Sidebar({
         </div>
 
         {/* Banner de Bienvenida - Modern Card */}
-        <div className="mx-4 mb-4 bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300">
+        <div className="mx-4 mb-4 bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300 animate-fade-in-up stagger-1">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-gradient-to-br from-[#1FC16B] to-[#16a861] rounded-xl shadow-md">
+            <div className="p-2 bg-gradient-to-br from-[#1FC16B] to-[#16a861] rounded-xl shadow-md group-hover:scale-110 transition-transform duration-300">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="font-bold text-gray-800 text-sm mb-1.5 flex items-center gap-2">
                 ¡Bienvenido!
-                <TrendingUp className="w-3.5 h-3.5 text-[#1FC16B]" />
+                <TrendingUp className="w-3.5 h-3.5 text-[#1FC16B] animate-pulse" />
               </h3>
               <p className="text-xs text-gray-600 leading-relaxed">
                 Calcula <span className="font-semibold text-[#246BFF]">rutas óptimas</span> entre sucursales usando algoritmos avanzados de grafos. 
@@ -70,7 +70,7 @@ export default function Sidebar({
 
         <div className="px-4 space-y-4">
           {/* Selección de Origen/Destino - Premium Card */}
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300 animate-fade-in-up stagger-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-md">
                 <MapPin className="w-4 h-4 text-white" />
@@ -442,12 +442,23 @@ export default function Sidebar({
       </div>
 
       {/* CTA Agendify - Premium Button */}
-      <div className="mx-4 mb-4 relative group">
+      <div className="mx-4 mb-3 relative group">
         <div className="absolute -inset-1 bg-gradient-to-r from-[#1FC16B] to-[#246BFF] rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
         <AgendifyPrimaryButton
           label="✨ Crear Cuenta Gratis"
           onClick={() => window.open('https://agendify.pro', '_blank')}
         />
+      </div>
+
+      {/* Footer - Powered by Agendify */}
+      <div className="mx-4 mb-4 text-center">
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-white/70 to-white/50 backdrop-blur-md rounded-full border border-white/60 shadow-md hover:shadow-lg transition-all duration-300 group">
+          <Sparkles className="w-4 h-4 text-[#1FC16B] group-hover:rotate-12 transition-transform duration-300" />
+          <span className="text-sm font-bold bg-gradient-to-r from-[#1FC16B] to-[#246BFF] bg-clip-text text-transparent">
+            Gracias Agendify
+          </span>
+          <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#1FC16B] to-[#246BFF] animate-pulse"></div>
+        </div>
       </div>
     </div>
   </aside>

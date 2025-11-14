@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MapView from './components/MapView';
 import Sidebar from './components/Sidebar';
+import WelcomeBanner from './components/WelcomeBanner';
+import { mockBranches, haversineDistance } from './utils/mockBranches';
 import speechManager from './utils/speechSynthesis';
 
 const API_URL = 'http://localhost:8080/api';
@@ -337,20 +339,22 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen">
-      <Sidebar
-        ciudades={ciudades}
-        origen={origen}
-        setOrigen={setOrigen}
-        destino={destino}
-        setDestino={setDestino}
-        onCalcularRuta={calcularRuta}
-        resultado={resultado}
-        loading={loading}
-        onBFS={ejecutarBFS}
-        onDFS={ejecutarDFS}
-        onPrim={ejecutarPrim}
-        onKruskal={ejecutarKruskal}
+    <>
+      <WelcomeBanner />
+      <div className="flex h-screen">
+        <Sidebar
+          ciudades={ciudades}
+          origen={origen}
+          setOrigen={setOrigen}
+          destino={destino}
+          setDestino={setDestino}
+          onCalcularRuta={calcularRuta}
+          resultado={resultado}
+          loading={loading}
+          onBFS={ejecutarBFS}
+          onDFS={ejecutarDFS}
+          onPrim={ejecutarPrim}
+          onKruskal={ejecutarKruskal}
         stats={stats}
         rutaReal={rutaReal}
         mostrarRutaReal={mostrarRutaReal}
@@ -381,6 +385,7 @@ function App() {
         />
       </div>
     </div>
+    </>
   );
 }
 
