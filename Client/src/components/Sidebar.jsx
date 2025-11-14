@@ -210,9 +210,9 @@ export default function Sidebar({
         </div>
 
         {/* Algoritmos adicionales - Premium Grid */}
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300">
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300 animate-fade-in-up stagger-3">
             <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-md">
+              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-md animate-pulse">
                 <Network className="w-4 h-4 text-white" />
               </div>
               <h2 className="text-sm font-bold text-gray-800">Algoritmos de Grafos</h2>
