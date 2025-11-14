@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import RoutingControl from './RoutingControl';
 import MapClickHandler from './MapClickHandler';
+import speechManager from '../utils/speechSynthesis';
 
 // Fix para los iconos de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -53,9 +54,49 @@ export default function MapView({
   onPuntoSeleccionado,
   puntoTemporal,
   origenManual,
-  destinoManual
+  destinoManual,
+  rutaReal,
+  vozActiva
 }) {
   const [bounds, setBounds] = useState([]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [previousRouteLength, setPreviousRouteLength] = useState(0);
+  
+  // Leer instrucción actual cuando cambia el paso o se activa la voz
+  useEffect(() => {
+    if (vozActiva && rutaReal && rutaReal.instructions && rutaReal.instructions[currentStepIndex]) {
+      const instruction = rutaReal.instructions[currentStepIndex];
+      let text = instruction.text;
+      
+      // Agregar distancia si es significativa
+      if (instruction.distance > 50) {
+        const distanceText = instruction.distance < 1000
+          ? `en ${Math.round(instruction.distance)} metros`
+          : `en ${(instruction.distance / 1000).toFixed(1)} kilómetros`;
+        text = `${text}, ${distanceText}`;
+      }
+      
+      speechManager.speak(text);
+    }
+  }, [currentStepIndex, vozActiva]);
+  
+  // Reiniciar el índice solo cuando cambia el número de instrucciones (nueva ruta)
+  useEffect(() => {
+    const currentLength = rutaReal?.instructions?.length || 0;
+    if (currentLength > 0 && currentLength !== previousRouteLength) {
+      setCurrentStepIndex(0);
+      setPreviousRouteLength(currentLength);
+    }
+  }, [rutaReal?.instructions?.length]);
+  
+  // Debug - para ver si llegan los datos
+  useEffect(() => {
+    console.log('MapView - mostrarRutaReal:', mostrarRutaReal);
+    console.log('MapView - rutaReal:', rutaReal);
+    if (rutaReal && rutaReal.instructions) {
+      console.log('MapView - Instrucciones:', rutaReal.instructions.length);
+    }
+  }, [mostrarRutaReal, rutaReal]);
   
   useEffect(() => {
     if (ciudades.length > 0) {
@@ -73,12 +114,133 @@ export default function MapView({
   const ciudadDestino = destino === 'manual' ? destinoManual : ciudades.find(c => c.id === destino);
 
   return (
-    <MapContainer
-      center={center}
-      zoom={zoom}
-      className="h-full w-full"
-      scrollWheelZoom={true}
-    >
+    <div className="relative h-full w-full">
+      {/* Panel de Instrucciones Flotante - Estilo Google Maps */}
+      {mostrarRutaReal && rutaReal && rutaReal.instructions && rutaReal.instructions.length > 0 && (
+        <div className="absolute top-4 right-4 z-[1000] w-96 max-h-[80vh] overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+            {/* Header con Resumen */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-bold text-lg flex items-center gap-2">
+                  🧭 Navegación Activa
+                </h3>
+                <button 
+                  onClick={() => setCurrentStepIndex(0)}
+                  className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition"
+                >
+                  Reiniciar
+                </button>
+              </div>
+              <div className="flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-1">
+                  <span className="opacity-90">📏</span>
+                  <span className="font-semibold">{(rutaReal.totalDistance / 1000).toFixed(1)} km</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="opacity-90">⏱️</span>
+                  <span className="font-semibold">{Math.round(rutaReal.totalTime / 60)} min</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Instrucción Actual Grande */}
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 border-b-2 border-green-200">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
+                  {currentStepIndex === 0 && '🚀'}
+                  {currentStepIndex > 0 && currentStepIndex < rutaReal.instructions.length - 1 && '➡️'}
+                  {currentStepIndex === rutaReal.instructions.length - 1 && '🎯'}
+                </div>
+                <div className="flex-1">
+                  <div className="text-xs text-gray-500 font-medium mb-1">
+                    Paso {currentStepIndex + 1} de {rutaReal.instructions.length}
+                  </div>
+                  <div className="text-lg font-bold text-gray-800 mb-2">
+                    {rutaReal.instructions[currentStepIndex].text}
+                  </div>
+                  {rutaReal.instructions[currentStepIndex].distance > 0 && (
+                    <div className="text-sm text-gray-600 flex items-center gap-2">
+                      <span className="font-semibold text-green-600">
+                        {rutaReal.instructions[currentStepIndex].distance < 1000
+                          ? `${Math.round(rutaReal.instructions[currentStepIndex].distance)} m`
+                          : `${(rutaReal.instructions[currentStepIndex].distance / 1000).toFixed(1)} km`
+                        }
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Botones de Navegación */}
+              <div className="flex gap-2 mt-4">
+                <button
+                  onClick={() => setCurrentStepIndex(Math.max(0, currentStepIndex - 1))}
+                  disabled={currentStepIndex === 0}
+                  className="flex-1 py-2 px-4 bg-white border-2 border-gray-200 rounded-xl font-medium text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                >
+                  ← Anterior
+                </button>
+                <button
+                  onClick={() => setCurrentStepIndex(Math.min(rutaReal.instructions.length - 1, currentStepIndex + 1))}
+                  disabled={currentStepIndex === rutaReal.instructions.length - 1}
+                  className="flex-1 py-2 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-medium text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg transition"
+                >
+                  Siguiente →
+                </button>
+              </div>
+            </div>
+
+            {/* Lista de Todas las Instrucciones */}
+            <div className="max-h-96 overflow-y-auto">
+              <div className="p-3 bg-gray-50 border-b border-gray-200">
+                <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wide">Todas las Instrucciones</h4>
+              </div>
+              {rutaReal.instructions.map((instruction, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => setCurrentStepIndex(idx)}
+                  className={`p-4 border-b border-gray-100 cursor-pointer transition-all hover:bg-blue-50 ${
+                    idx === currentStepIndex ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:border-l-4 hover:border-blue-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-lg ${
+                      idx === currentStepIndex ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
+                    }`}>
+                      {idx === 0 && '🚀'}
+                      {idx > 0 && idx < rutaReal.instructions.length - 1 && (idx + 1)}
+                      {idx === rutaReal.instructions.length - 1 && '🎯'}
+                    </div>
+                    <div className="flex-1">
+                      <div className={`text-sm font-medium ${
+                        idx === currentStepIndex ? 'text-blue-700' : 'text-gray-700'
+                      }`}>
+                        {instruction.text}
+                      </div>
+                      {instruction.distance > 0 && (
+                        <div className="text-xs text-gray-500 mt-1">
+                          {instruction.distance < 1000
+                            ? `${Math.round(instruction.distance)} metros`
+                            : `${(instruction.distance / 1000).toFixed(1)} km`
+                          }
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <MapContainer
+        center={center}
+        zoom={zoom}
+        className="h-full w-full"
+        scrollWheelZoom={true}
+      >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -194,6 +356,7 @@ export default function MapView({
           </Marker>
         );
       })}
-    </MapContainer>
+      </MapContainer>
+    </div>
   );
 }

@@ -22,6 +22,15 @@ export default function Sidebar({
   vozActiva,
   onVozActivaChange,
   rutaReal,
+  mostrarRutaReal,
+  setMostrarRutaReal,
+  stats,
+  onObtenerUbicacionActual,
+  cargandoUbicacion,
+  onOrdenarCiudades,
+  onCompararOrdenamiento,
+  onCalcularPeajes,
+  onGenerarCombinaciones,
 }) {
   return (
     <aside className="w-[420px] h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 shadow-2xl overflow-y-auto custom-scrollbar">
@@ -104,27 +113,47 @@ export default function Sidebar({
                   </button>
                 </div>
               ) : (
-                <div className="flex gap-2">
-                  <select
-                    value={origen === 'manual' ? '' : origen}
-                    onChange={(e) => setOrigen(e.target.value)}
-                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#1FC16B] focus:ring-2 focus:ring-[#1FC16B]/20 text-sm font-medium bg-white shadow-sm transition-all"
-                  >
-                    <option value="">Seleccione origen...</option>
-                    {ciudades.map(c => (
-                      <option key={c.id} value={c.id}>{c.nombre}</option>
-                    ))}
-                  </select>
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <select
+                      value={origen === 'manual' ? '' : origen}
+                      onChange={(e) => setOrigen(e.target.value)}
+                      className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#1FC16B] focus:ring-2 focus:ring-[#1FC16B]/20 text-sm font-medium bg-white shadow-sm transition-all"
+                    >
+                      <option value="">Seleccione origen...</option>
+                      {ciudades.map(c => (
+                        <option key={c.id} value={c.id}>{c.nombre}</option>
+                      ))}
+                    </select>
+                    <button
+                      onClick={onSeleccionManualOrigen}
+                      className={`p-3 rounded-xl transition-all duration-300 shadow-sm ${
+                        modoSeleccion === 'origen'
+                          ? 'bg-gradient-to-br from-[#1FC16B] to-[#16a861] text-white shadow-lg scale-105'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow'
+                      }`}
+                      title="Seleccionar en el mapa"
+                    >
+                      <MapPin className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {/* Botón de Ubicación Actual */}
                   <button
-                    onClick={onSeleccionManualOrigen}
-                    className={`p-3 rounded-xl transition-all duration-300 shadow-sm ${
-                      modoSeleccion === 'origen'
-                        ? 'bg-gradient-to-br from-[#1FC16B] to-[#16a861] text-white shadow-lg scale-105'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow'
-                    }`}
-                    title="Seleccionar en el mapa"
+                    onClick={onObtenerUbicacionActual}
+                    disabled={cargandoUbicacion}
+                    className="w-full py-2.5 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-sm font-medium shadow-sm hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <MapPin className="w-4 h-4" />
+                    {cargandoUbicacion ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                        <span>Obteniendo ubicación...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Navigation className="w-4 h-4" />
+                        <span>📍 Usar Mi Ubicación Actual</span>
+                      </>
+                    )}
                   </button>
                 </div>
               )}
@@ -363,9 +392,61 @@ export default function Sidebar({
           </div>
         )}
 
+        {/* Herramientas de Optimización - Algoritmos Generales */}
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300 animate-fade-in-up stagger-4">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-md">
+              <Zap className="w-4 h-4 text-white" />
+            </div>
+            <h2 className="text-sm font-bold text-gray-800">Herramientas de Optimización</h2>
+          </div>
+
+          <div className="space-y-2">
+            {/* Ordenar ciudades por distancia */}
+            <button
+              onClick={onOrdenarCiudades}
+              disabled={!origen || ciudades.length === 0}
+              className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed group text-sm font-medium"
+            >
+              <TrendingUp className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <span>Ordenar Ciudades (QuickSort)</span>
+            </button>
+
+            {/* Comparar algoritmos de ordenamiento */}
+            <button
+              onClick={onCompararOrdenamiento}
+              disabled={!origen || ciudades.length === 0}
+              className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-xl hover:from-indigo-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed group text-sm font-medium"
+            >
+              <span className="text-xl">⚡</span>
+              <span>Comparar QuickSort vs MergeSort</span>
+            </button>
+
+            {/* Calcular peajes (cambio de monedas) */}
+            <button
+              onClick={onCalcularPeajes}
+              disabled={!rutaReal}
+              className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed group text-sm font-medium"
+            >
+              <span className="text-xl">💰</span>
+              <span>Calcular Cambio de Peajes</span>
+            </button>
+
+            {/* Generar combinaciones de paradas (Backtracking) */}
+            <button
+              onClick={onGenerarCombinaciones}
+              disabled={ciudades.length === 0}
+              className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-cyan-500 to-teal-600 text-white rounded-xl hover:from-cyan-600 hover:to-teal-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed group text-sm font-medium"
+            >
+              <span className="text-xl">🔄</span>
+              <span>Combinar Paradas (Backtracking)</span>
+            </button>
+          </div>
+        </div>
+
         {/* Control de Voz - Premium Toggle */}
         {rutaReal && rutaReal.instructions && (
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300 animate-fade-in-up stagger-4">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300 animate-fade-in-up stagger-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-xl shadow-md transition-all duration-300 ${

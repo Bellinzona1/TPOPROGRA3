@@ -22,39 +22,40 @@ class SpeechSynthesisManager {
   speak(text, options = {}) {
     if (!this.isEnabled) return;
 
-    // Cancelar cualquier discurso en curso
-    this.stop();
+    // Cancelar COMPLETAMENTE cualquier discurso en curso
+    this.synth.cancel();
+    this.currentUtterance = null;
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Configurar voz en español
-    const voices = this.synth.getVoices();
-    const spanishVoice = voices.find(voice => 
-      voice.lang.startsWith('es') || voice.lang.startsWith('spa')
-    );
-    
-    if (spanishVoice) {
-      utterance.voice = spanishVoice;
-    }
-    
-    utterance.lang = 'es-ES';
-    utterance.rate = options.rate || 1.0; // Velocidad (0.1 a 10)
-    utterance.pitch = options.pitch || 1.0; // Tono (0 a 2)
-    utterance.volume = options.volume || 1.0; // Volumen (0 a 1)
+    // Pequeño delay para asegurar que se canceló
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      // Configurar voz en español
+      const voices = this.synth.getVoices();
+      const spanishVoice = voices.find(voice => 
+        voice.lang.startsWith('es') || voice.lang.startsWith('spa')
+      );
+      
+      if (spanishVoice) {
+        utterance.voice = spanishVoice;
+      }
+      
+      utterance.lang = 'es-ES';
+      utterance.rate = options.rate || 1.0; // Velocidad (0.1 a 10)
+      utterance.pitch = options.pitch || 1.0; // Tono (0 a 2)
+      utterance.volume = options.volume || 1.0; // Volumen (0 a 1)
 
-    this.currentUtterance = utterance;
-    this.synth.speak(utterance);
-
-    return new Promise((resolve) => {
+      this.currentUtterance = utterance;
+      
       utterance.onend = () => {
         this.currentUtterance = null;
-        resolve();
       };
       utterance.onerror = () => {
         this.currentUtterance = null;
-        resolve();
       };
-    });
+
+      this.synth.speak(utterance);
+    }, 100);
   }
 
   // Detener la síntesis

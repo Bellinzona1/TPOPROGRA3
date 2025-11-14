@@ -12,7 +12,10 @@ CREATE (mdq:Ciudad {id: 'mdq', nombre: 'Mar del Plata', lat: -38.0055, lng: -57.
 CREATE (mendoza:Ciudad {id: 'mendoza', nombre: 'Mendoza', lat: -32.8895, lng: -68.8458})
 CREATE (salta:Ciudad {id: 'salta', nombre: 'Salta', lat: -24.7821, lng: -65.4232})
 CREATE (tucuman:Ciudad {id: 'tucuman', nombre: 'San Miguel de Tucumán', lat: -26.8083, lng: -65.2176})
-CREATE (bariloche:Ciudad {id: 'bariloche', nombre: 'San Carlos de Bariloche', lat: -41.1335, lng: -71.3103});
+CREATE (bariloche:Ciudad {id: 'bariloche', nombre: 'San Carlos de Bariloche', lat: -41.1335, lng: -71.3103})
+CREATE (chubut:Ciudad {id: 'chubut', nombre: 'Rawson (Chubut)', lat: -43.3002, lng: -65.1023})
+CREATE (misiones:Ciudad {id: 'misiones', nombre: 'Posadas (Misiones)', lat: -27.3671, lng: -55.8961})
+CREATE (corrientes:Ciudad {id: 'corrientes', nombre: 'Corrientes', lat: -27.4806, lng: -58.8341});
 
 // 3. Crear rutas bidireccionales con distancias aproximadas en km
 // Buenos Aires - Rosario
@@ -49,7 +52,31 @@ CREATE (bariloche)-[:CONECTA_CON {distanciaKm: 1640}]->(bsas)
 
 // Mendoza - Bariloche
 CREATE (mendoza)-[:CONECTA_CON {distanciaKm: 1080}]->(bariloche)
-CREATE (bariloche)-[:CONECTA_CON {distanciaKm: 1080}]->(mendoza);
+CREATE (bariloche)-[:CONECTA_CON {distanciaKm: 1080}]->(mendoza)
+
+// Bariloche - Chubut
+CREATE (bariloche)-[:CONECTA_CON {distanciaKm: 530}]->(chubut)
+CREATE (chubut)-[:CONECTA_CON {distanciaKm: 530}]->(bariloche)
+
+// Buenos Aires - Chubut
+CREATE (bsas)-[:CONECTA_CON {distanciaKm: 1400}]->(chubut)
+CREATE (chubut)-[:CONECTA_CON {distanciaKm: 1400}]->(bsas)
+
+// Buenos Aires - Corrientes
+CREATE (bsas)-[:CONECTA_CON {distanciaKm: 1040}]->(corrientes)
+CREATE (corrientes)-[:CONECTA_CON {distanciaKm: 1040}]->(bsas)
+
+// Corrientes - Misiones
+CREATE (corrientes)-[:CONECTA_CON {distanciaKm: 340}]->(misiones)
+CREATE (misiones)-[:CONECTA_CON {distanciaKm: 340}]->(corrientes)
+
+// Rosario - Corrientes
+CREATE (rosario)-[:CONECTA_CON {distanciaKm: 750}]->(corrientes)
+CREATE (corrientes)-[:CONECTA_CON {distanciaKm: 750}]->(rosario)
+
+// Tucumán - Corrientes
+CREATE (tucuman)-[:CONECTA_CON {distanciaKm: 720}]->(corrientes)
+CREATE (corrientes)-[:CONECTA_CON {distanciaKm: 720}]->(tucuman);
 
 // 4. Verificar que todo se creó correctamente
 MATCH (c:Ciudad)-[r:CONECTA_CON]->(d:Ciudad)
