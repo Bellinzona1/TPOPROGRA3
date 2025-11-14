@@ -231,37 +231,37 @@ export default function Sidebar({
               <button
                 onClick={onBFS}
                 disabled={!origen || loading || origen === 'manual'}
-                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-pink-500 to-rose-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden"
+                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-pink-500 to-rose-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden animate-scale-in stagger-1"
               >
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                <GitBranch className="w-5 h-5 relative z-10" />
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 group-hover:animate-shimmer transition-opacity"></div>
+                <GitBranch className="w-5 h-5 relative z-10 group-hover:rotate-12 transition-transform" />
                 <span className="relative z-10">BFS</span>
               </button>
               <button
                 onClick={onDFS}
                 disabled={!origen || loading || origen === 'manual'}
-                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-rose-500 to-red-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden"
+                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-rose-500 to-red-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden animate-scale-in stagger-2"
               >
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                <GitBranch className="w-5 h-5 relative z-10" />
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 group-hover:animate-shimmer transition-opacity"></div>
+                <GitBranch className="w-5 h-5 relative z-10 group-hover:rotate-12 transition-transform" />
                 <span className="relative z-10">DFS</span>
               </button>
               <button
                 onClick={onPrim}
                 disabled={!origen || loading || origen === 'manual' || destino === 'manual'}
-                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-cyan-500 to-blue-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden"
+                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-cyan-500 to-blue-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden animate-scale-in stagger-3"
               >
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                <Trees className="w-5 h-5 relative z-10" />
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 group-hover:animate-shimmer transition-opacity"></div>
+                <Trees className="w-5 h-5 relative z-10 group-hover:rotate-12 transition-transform" />
                 <span className="relative z-10">Prim</span>
               </button>
               <button
                 onClick={onKruskal}
                 disabled={loading || origen === 'manual' || destino === 'manual'}
-                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-blue-500 to-indigo-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden"
+                className="group relative flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-blue-500 to-indigo-600 text-white py-4 rounded-xl text-xs font-bold hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden animate-scale-in stagger-4"
               >
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                <Trees className="w-5 h-5 relative z-10" />
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 group-hover:animate-shimmer transition-opacity"></div>
+                <Trees className="w-5 h-5 relative z-10 group-hover:rotate-12 transition-transform" />
                 <span className="relative z-10">Kruskal</span>
               </button>
             </div>
@@ -269,10 +269,10 @@ export default function Sidebar({
 
         {/* Loading - Modern Spinner */}
         {loading && (
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-8 shadow-lg text-center">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-8 shadow-lg text-center animate-fade-in-up">
             <div className="relative inline-block">
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-transparent" style={{ borderTopColor: '#1FC16B' }}></div>
-              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#1FC16B]/20 to-[#246BFF]/20 blur-md"></div>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#1FC16B]/20 to-[#246BFF]/20 blur-md animate-pulse"></div>
             </div>
             <p className="text-gray-700 mt-4 text-sm font-semibold">Calculando ruta...</p>
             <p className="text-gray-500 text-xs mt-1">Procesando algoritmo</p>
@@ -281,9 +281,9 @@ export default function Sidebar({
 
         {/* Resultados - Premium Card */}
         {resultado && !loading && (
-          <div className="bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-xl border-l-4 border-[#1FC16B] hover:shadow-2xl transition-all duration-300">
+          <div className="bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-xl border-l-4 border-[#1FC16B] hover:shadow-2xl transition-all duration-300 animate-slide-in-right">
             <h3 className="text-sm font-black text-gray-800 mb-4 flex items-center gap-2.5">
-              <div className="p-1.5 bg-gradient-to-br from-[#1FC16B] to-[#16a861] rounded-lg">
+              <div className="p-1.5 bg-gradient-to-br from-[#1FC16B] to-[#16a861] rounded-lg animate-pulse">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <span>
@@ -365,16 +365,16 @@ export default function Sidebar({
 
         {/* Control de Voz - Premium Toggle */}
         {rutaReal && rutaReal.instructions && (
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/60 hover:shadow-xl transition-all duration-300 animate-fade-in-up stagger-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-xl shadow-md transition-all duration-300 ${
                   vozActiva 
-                    ? 'bg-gradient-to-br from-[#1FC16B] to-[#16a861]' 
+                    ? 'bg-gradient-to-br from-[#1FC16B] to-[#16a861] animate-pulse' 
                     : 'bg-gradient-to-br from-gray-400 to-gray-500'
                 }`}>
                   {vozActiva ? (
-                    <Volume2 className="w-4 h-4 text-white" />
+                    <Volume2 className="w-4 h-4 text-white animate-float" />
                   ) : (
                     <VolumeX className="w-4 h-4 text-white" />
                   )}
@@ -392,7 +392,7 @@ export default function Sidebar({
               {/* Toggle Switch - Modern */}
               <button
                 onClick={() => onVozActivaChange(!vozActiva)}
-                className={`relative w-14 h-7 rounded-full transition-all duration-300 shadow-inner ${
+                className={`relative w-14 h-7 rounded-full transition-all duration-300 shadow-inner hover:scale-105 ${
                   vozActiva 
                     ? 'bg-gradient-to-r from-[#1FC16B] to-[#16a861]' 
                     : 'bg-gray-300'
@@ -404,7 +404,7 @@ export default function Sidebar({
                   }`}
                 >
                   <div className={`absolute inset-0 rounded-full transition-all duration-300 ${
-                    vozActiva ? 'bg-gradient-to-br from-green-400/20 to-emerald-500/20' : ''
+                    vozActiva ? 'bg-gradient-to-br from-green-400/20 to-emerald-500/20 animate-pulse' : ''
                   }`}></div>
                 </div>
               </button>
@@ -414,22 +414,22 @@ export default function Sidebar({
             {rutaReal && (
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center justify-between text-xs animate-fade-in-up stagger-1">
                     <span className="text-gray-600 font-medium">Distancia Real:</span>
                     <span className="font-bold text-[#1FC16B]">
                       {(rutaReal.distance / 1000).toFixed(2)} km
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center justify-between text-xs animate-fade-in-up stagger-2">
                     <span className="text-gray-600 font-medium">Tiempo Estimado:</span>
                     <span className="font-bold text-[#246BFF]">
                       {Math.round(rutaReal.duration / 60)} min
                     </span>
                   </div>
                   {vozActiva && (
-                    <div className="mt-3 p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                    <div className="mt-3 p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200 animate-scale-in">
                       <p className="text-xs text-green-700 font-medium flex items-center gap-2">
-                        <Zap className="w-3.5 h-3.5" />
+                        <Zap className="w-3.5 h-3.5 animate-pulse" />
                         Instrucciones de navegación activas
                       </p>
                     </div>
